@@ -5,7 +5,13 @@ import { useQuery } from '@apollo/client';
 import { QUERY_PRODUCTS } from '../utils/queries';
 import spinner from '../assets/spinner.gif';
 import { useStoreContext } from '../utils/GlobalState';
-import { UPDATE_PRODUCTS } from '../utils/actions';
+import {
+  REMOVE_FROM_CART,
+  UPDATE_CART_QUANTITY,
+  ADD_TO_CART,
+  UPDATE_PRODUCTS,
+} from '../utils/actions';
+import Cart from '../components/Cart';
 
 function Detail() {
   const [state, dispatch] = useStoreContext();
@@ -28,6 +34,13 @@ function Detail() {
     }
   }, [products, data, dispatch, id]);
 
+  const addToCart = () => {
+    dispatch({
+      type: ADD_TO_CART,
+      product: { ...currentProduct, purchaseQuantity: 1 }
+    });
+  };
+
   return (
     <>
       {currentProduct ? (
@@ -40,7 +53,7 @@ function Detail() {
 
           <p>
             <strong>Price:</strong>${currentProduct.price}{' '}
-            <button>Add to Cart</button>
+            <button onClick={addToCart}>Add to cart</button>
             <button>Remove from Cart</button>
           </p>
 
@@ -51,6 +64,7 @@ function Detail() {
         </div>
       ) : null}
       {loading ? <img src={spinner} alt="loading" /> : null}
+      <Cart />
     </>
   );
 }
